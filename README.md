@@ -1,40 +1,26 @@
 # Munki Enroll
 
-A set of scripts to automatically enroll clients in Munki, allowing for a very flexible manifest structure.
+A set of scripts to automatically enroll clients in Munki. Adapted from [edingc/munki-enroll](https://github.com/edingc/munki-enroll).
 
-## Why Munki Enroll?
+## Why modify Munki Enroll?
 
-My organization has a very homogenous environment consisting of several identical deployments. We deploy machines with a basic manifest, like "room_28". This works wonderfully, until computer three in room 28 needs a special piece of software.
+We're using Munki to bootstrap Macs after imaging with DeployStudio.  However, we prefer not to set the [ClientIdentifier or SoftwareRepoURL](https://code.google.com/p/munki/wiki/configuration) - the repository is located at http://munki/repo, and we create a unique manifest per machine. Each manifest is named after the hostname of the computer, and includes other manifests, depending on the software that should be made available to the computer.
 
-Munki Enroll allows us this flexibility. A computer is deployed with a generic manifest, and Munki Enroll changes the manifest to a specific manifest. The new specific manifest contains the generic manifest as an included_manifests key, allowing us to easily target the whole lab and each individual computer.
+While I don't mind creating manifests manually each time I need to image a new Mac, this is not convenient nor possible for everyone that has access to use our DeployStudio server. Without a manifest, though, each new Mac receives no software.
 
-### Wait, Doesn't Munki Do This Already?
+This fork of Cody Eding's munki-enroll project is considerably simpler, and fits our needs exactly.  Here's how it works:
 
-Munki can target systems based on hostnames or serial numbers. However, each manifest must be created by hand. Munki Enroll allows us to create specific manifests automatically, and to allow them to contain a more generic manifest for large-scale software management.
+1. Someone with the proper Active Directory permissions to use our DeployStudio server runs the faculty/staff imaging workflow.
+2. DeployStudio prompts the user for the hostname of the computer, then writes a basic OS X image to the hard drive.  After the imaging is completed, DeployStudio reboots and runs the post-imaging tasks. The munki_enroll.sh script runs after the machine is bound to AD, but before the [bootstrap file](https://code.google.com/p/munki/wiki/BootstrappingWithMunki) is created.
+3. If the hostname already exists as a manifest, the script exits. Otherwise, the server creates a new basic faculty/staff manifest based on the hostname of the computer.
 
-## Installation
+In our case, the new manifest contains two other manifests: "\_\__core_software" and "__faculty_staff".  The "core software" manifest contains software made available to everyone, but "faculty/staff" contains software just for faculty and staff (not labs, podiums, or servers).
 
-Munki Enroll requires PHP to be working on the webserver hosting your Munki repository.
+If a user needs more software pushed to their computer, it's very easy for us to do so by editing their manifest.
 
-Copy the "munki-enroll" folder to the root of your Munki repository (the same directory as pkgs, pkginfo, manifests and catalogs). 
+### More?
 
-That's it! Be sure to make note of the full URL path to the enroll.php file.
-
-## Client Configuration
-
-Edit the included munki_enroll.sh script to include the full URL path to the enroll.php file on your Munki repository.
-
-	SUBMITURL="https://munki/munki-enroll/enroll.php"
-
-The included munki_enroll.sh script can be executed in any number of ways (Terminal, ARD, DeployStudio workflow, LaunchAgent, etc.). Once the script is executed, the Client Identifier is switched to a unique identifier based on the system's hostname.
-
-## Caveats
-
-Currently, Munki Enroll lacks any kind of error checking. It works perfectly fine in my environment without it. Your mileage may vary.
-
-Your web server must have access to write to your Munki repository. I suggest combining SSL and Basic Authentication (you're doing this anyway, right?) on your Munki repository to help keep nefarious things out. To do this, edit the CURL command in munki_enroll.sh to include the following flag:
-
-	--user "USERNAME:PASSWORD;" 
+You should check out [edingc/munki-enroll](https://github.com/edingc/munki-enroll) for the original intentions behind his code, and for installation instructions.
 
 ## License
 
