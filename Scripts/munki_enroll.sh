@@ -7,6 +7,8 @@
 #         : This version has been modified to pass a custom catalog and manifest name to the php script.
 #         : Easier to mod this script than the php script after the fact.
 # Version : 1.1 - 22-02-2015 - Added the rest of our desired munki client configuration and bootstrapping.
+#         : Also removed all the quotes characters as DeployStudio STILL hasn't fixed their issue where it turns
+#         : " into "\u201C" and/or "\u201D" for left or right hand quotes respectively.
 
 # Set up variables here
 
