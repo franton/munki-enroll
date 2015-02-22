@@ -8,7 +8,9 @@ We're using Munki to bootstrap Macs after imaging with DeployStudio. However, we
 
 While I don't mind creating manifests manually each time I need to image a new Mac, this is not convenient nor possible for everyone that has access to use our DeployStudio server. Without a manifest, though, each new Mac receives no software.
 
-This fork of Cody Eding's Munki Enroll project is considerably simpler, and fits our needs exactly.  Here's how it works:
+This fork of Cody Eding's Munki Enroll project is simpler, and should fit the needs of the client i'm working for.
+
+Here's how it works:
 
 1. Someone with the proper permissions to use the DeployStudio server runs the imaging workflow.
 2. DeployStudio prompts the user for the hostname of the computer, then writes a basic OS X image to the hard drive.  After the imaging is completed, DeployStudio reboots and runs the post-imaging tasks. This process writes the desired munki behaviour preferences, the munki tools package and enrolls the computer into munki reports.
