@@ -8,7 +8,7 @@ $catalog    = $_GET["catalog"];
 $manifest   = $_GET["manifest"];
 
 // Check if manifest already exists for this machine
-if ( file_exists( '../manifests/' . $hostname ) )
+if ( file_exists( '../manifests/computers/' . $hostname ) )
     {
         echo "Computer manifest already exists.";
     }
@@ -29,7 +29,7 @@ else
         $array->add( new CFString( $manifest ) );
         
         // Save the newly created plist
-        $plist->saveXML( '../manifests/' . $hostname );
+        $plist->saveXML( '../manifests/computers/' . $hostname );
         
     }
 
