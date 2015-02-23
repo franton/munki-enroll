@@ -20,7 +20,7 @@ MANIFEST=everyone
 # Get munki_enroll to see if there's an existing manifest for this computer hostname.
 # Create it, if it doesn't exist and attach it to the manifest name in the variable with the production catalog.
 
-/usr/bin/curl --max-time 5 --silent --get -d hostname=$DS_HOSTNAME catalog=$CATALOG manifest=$MANIFEST $SUBMITURL
+/usr/bin/curl --max-time 5 --silent --get -d hostname=$DS_HOSTNAME -d catalog=$CATALOG -d manifest=$MANIFEST $SUBMITURL
 
 # Ok, now we need to configure and bootstrap the rest of munki on the target computer.
 
